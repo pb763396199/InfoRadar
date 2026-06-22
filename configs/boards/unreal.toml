@@ -1,0 +1,31 @@
+id = "unreal"
+name = "Unreal"
+description = "Unreal Engine ecosystem intelligence: engine updates, open source, marketplace, talks, tutorials, and games."
+default = true
+
+keywords = ["unreal", "ue5", "ue4", "unreal engine", "虚幻", "epic"]
+categories = ["Official", "Open Source", "Marketplace", "Games", "Video", "Talks", "News", "Community"]
+
+[[sources]]
+id = "github-unreal"
+name = "GitHub Unreal"
+kind = "github_search"
+enabled = true
+url = "https://api.github.com/search/repositories?q=unreal+engine&sort=updated"
+rate_limit_per_minute = 10
+timeout_seconds = 20
+max_items = 50
+risk_level = "stable"
+public_fields = ["title", "url", "description", "stars", "language", "updated_at"]
+
+[[sources]]
+id = "google-news-unreal"
+name = "Google News Unreal"
+kind = "rss"
+enabled = true
+url = "https://news.google.com/rss/search?q=Unreal%20Engine&hl=en-US&gl=US&ceid=US:en"
+rate_limit_per_minute = 6
+timeout_seconds = 20
+max_items = 50
+risk_level = "stable"
+public_fields = ["title", "url", "description", "published_at"]

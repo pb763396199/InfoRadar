@@ -1,0 +1,12 @@
+[package]
+name = "inforadar-collectors"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+feed-rs.workspace = true
+inforadar-core = { path = "../inforadar-core" }
+reqwest.workspace = true
+serde_json.workspace = true

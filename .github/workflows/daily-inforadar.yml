@@ -1,0 +1,77 @@
+name: Daily InfoRadar
+
+on:
+  schedule:
+    - cron: "17 21 * * *"
+  workflow_dispatch:
+    inputs:
+      board:
+        description: Board id to build
+        required: false
+        default: unreal
+      date:
+        description: Issue date, YYYY-MM-DD. Defaults to current UTC date.
+        required: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Restore InfoRadar database
+        uses: actions/cache@v4
+        with:
+          path: .inforadar/inforadar.db
+          key: inforadar-db-${{ github.run_id }}
+          restore-keys: |
+            inforadar-db-
+
+      - name: Validate and build
+        shell: bash
+        run: |
+          set -euo pipefail
+          DATE_INPUT="${{ github.event.inputs.date }}"
+          BOARD_INPUT="${{ github.event.inputs.board }}"
+          BOARD="${BOARD_INPUT:-unreal}"
+          DATE="${DATE_INPUT:-$(date -u +%F)}"
+          cargo fmt --check
+          cargo test --workspace
+          cargo run -p inforadar-cli -- validate-config
+          cargo run -p inforadar-cli -- collect --board "$BOARD" --date "$DATE"
+          cargo run -p inforadar-cli -- build-site --all --out public
+          ! grep -R -i -E "rawFields|raw_html|api_key|secret|authorization|stacktrace" public
+
+      - name: Upload database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inforadar-db
+          path: .inforadar/inforadar.db
+          retention-days: 14
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

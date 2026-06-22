@@ -1,0 +1,3 @@
+InfoRadar publishes source metadata, links, short summaries, and derived
+classification signals. Public exports must not include raw HTML, full article
+text, private tokens, internal logs, or non-whitelisted source fields.

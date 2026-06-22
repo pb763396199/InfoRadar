@@ -1,0 +1,10 @@
+[package]
+name = "inforadar-site"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+inforadar-core = { path = "../inforadar-core" }
+serde_json.workspace = true

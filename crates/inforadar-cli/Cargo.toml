@@ -1,0 +1,18 @@
+[package]
+name = "inforadar-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "inforadar"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+clap.workspace = true
+inforadar-collectors = { path = "../inforadar-collectors" }
+inforadar-core = { path = "../inforadar-core" }
+inforadar-site = { path = "../inforadar-site" }
+inforadar-store = { path = "../inforadar-store" }
