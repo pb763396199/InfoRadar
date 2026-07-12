@@ -1,8 +1,6 @@
 name: Daily InfoRadar
 
 on:
-  schedule:
-    - cron: "17 21 * * *"
   workflow_dispatch:
     inputs:
       board:
